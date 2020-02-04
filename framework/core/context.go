@@ -17,6 +17,7 @@ type contextI interface {
 	JSON(code int, obj interface{})
 	Data(code int, data []byte)
 	HTML(code int, html string)
+	Param(key string) string
 }
 
 type Context struct {
@@ -26,6 +27,7 @@ type Context struct {
 	// request info
 	Path   string
 	Method string
+	Params map[string]string
 	// response info
 	StatusCode int
 }
@@ -80,4 +82,9 @@ func (c *Context) HTML(code int, html string) {
 	c.Status(code)
 	c.SetHeader("Content-Type", "text/html")
 	c.w.Write([]byte(html))
+}
+
+func (c *Context) Param(key string) string {
+	value, _ := c.Params[key]
+	return value
 }
