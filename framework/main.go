@@ -1,8 +1,8 @@
 package main
 
 import (
+	"examples/framework/core"
 	"net/http"
-	"practice/framework/core"
 )
 
 func main() {
