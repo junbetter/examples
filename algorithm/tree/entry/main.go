@@ -1,8 +1,8 @@
 package main
 
 import (
+	"examples/algorithm/tree"
 	"fmt"
-	"practice/algorithm/tree"
 )
 
 func main() {
