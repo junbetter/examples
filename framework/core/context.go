@@ -8,7 +8,7 @@ import (
 
 type H map[string]interface{}
 
-type contextI interface {
+type IContext interface {
 	Status(code int)
 	SetHeader(key string, value string)
 	PostForm(string) string

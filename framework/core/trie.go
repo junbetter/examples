@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type nodeI interface {
+type INode interface {
 	String() string
 	insert(pattern string, parts []string, height int)
 	search(parts []string, height int) *node
