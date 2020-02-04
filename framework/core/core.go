@@ -6,6 +6,14 @@ import (
 
 type HandlerFunc func(*Context)
 
+type IEngine interface {
+	addRoute(method string, pattern string, handler HandlerFunc)
+	GET(pattern string, handler HandlerFunc)
+	POST(pattern string, handler HandlerFunc)
+	ServeHTTP(w http.ResponseWriter, r *http.Request)
+	Run(addr string) (err error)
+}
+
 type Engine struct {
 	router *router
 }
