@@ -5,6 +5,13 @@ import (
 	"strings"
 )
 
+type IRouter interface {
+	addRoute(method string, pattern string, handler HandlerFunc)
+	getRoute(method string, path string) (*node, map[string]string)
+	getRoutes(method string) []*node
+	handle(c *Context)
+}
+
 type router struct {
 	roots    map[string]*node
 	handlers map[string]HandlerFunc
@@ -69,6 +76,16 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 	}
 
 	return nil, nil
+}
+
+func (r *router) getRoutes(method string) []*node {
+	root, ok := r.roots[method]
+	if !ok {
+		return nil
+	}
+	nodes := make([]*node, 0)
+	root.travel(&nodes)
+	return nodes
 }
 
 func (r *router) handle(c *Context) {
