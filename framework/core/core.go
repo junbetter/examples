@@ -34,10 +34,18 @@ type Engine struct {
 	groups []*RouterGroup // store all groups
 }
 
+// New is the constructor of Engine
 func New() *Engine {
 	engine := &Engine{router: newRouter()}
 	engine.RouterGroup = &RouterGroup{engine: engine}
 	engine.groups = []*RouterGroup{engine.RouterGroup}
+	return engine
+}
+
+// Default use Logger() & Recovery middleware
+func Default() *Engine {
+	engine := New()
+	engine.Use(Logger(), Recovery())
 	return engine
 }
 
