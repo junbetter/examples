@@ -19,8 +19,7 @@ func onlyForV2() core.HandlerFunc {
 }
 
 func main() {
-	r := core.New()
-	r.Use(core.Logger())
+	r := core.Default()
 	r.GET("/index", func(c *core.Context) {
 		c.HTML(http.StatusOK, "<h1>hello world</h1>")
 	})
@@ -53,6 +52,12 @@ func main() {
 
 	r.GET("/assets/*filepath", func(c *core.Context) {
 		c.JSON(http.StatusOK, core.H{"filepath": c.Param("filepath")})
+	})
+
+	// index out of range for testing Recovery()
+	r.GET("/panic", func(c *core.Context) {
+		names := []string{"goo"}
+		c.String(http.StatusOK, names[10])
 	})
 
 	r.Run(":9000")
