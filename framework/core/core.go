@@ -3,6 +3,7 @@ package core
 import (
 	"log"
 	"net/http"
+	"strings"
 )
 
 type HandlerFunc func(*Context)
@@ -17,6 +18,7 @@ type IRouterGroup interface {
 	GET(pattern string, handler HandlerFunc)
 	POST(pattern string, handler HandlerFunc)
 	Group(prefix string) *RouterGroup
+	Use(middlewares ...HandlerFunc)
 }
 
 type RouterGroup struct {
@@ -65,8 +67,19 @@ func (g *RouterGroup) POST(pattern string, handler HandlerFunc) {
 	g.addRoute("POST", pattern, handler)
 }
 
+func (g *RouterGroup) Use(middlewares ...HandlerFunc) {
+	g.middlewares = append(g.middlewares, middlewares...)
+}
+
 func (e *Engine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	var middlewares []HandlerFunc
+	for _, group := range e.groups {
+		if strings.HasPrefix(r.URL.Path, group.prefix) {
+			middlewares = append(middlewares, group.middlewares...)
+		}
+	}
 	c := newContext(w, r)
+	c.handlers = middlewares
 	e.router.handle(c)
 }
 
