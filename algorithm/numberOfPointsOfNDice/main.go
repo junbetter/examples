@@ -18,8 +18,15 @@ func solution(n int) []float64 {
 	}
 	max := 6
 	t := n
-	m := map[int]int{0: 1}
-	for t > 0 {
+	m := map[int]int{}
+
+	//当n为1时每个点数出现的次数情况都为1
+	for i := 1; i <= max; i++ {
+		m[i] = 1
+	}
+
+	//当n大于1时需计算n个相加的点数出现的次数
+	for t > 1 {
 		tmp := map[int]int{}
 		for i := 1; i <= max; i++ {
 			for k, v := range m {
@@ -29,10 +36,12 @@ func solution(n int) []float64 {
 		m = tmp
 		t--
 	}
+
 	total := math.Pow(float64(max), float64(n))
 	ret := make([]float64, n*max-n+1)
 	for k, v := range m {
 		ret[k-n] = float64(v) / total
 	}
+
 	return ret
 }
